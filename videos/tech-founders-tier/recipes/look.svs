@@ -1,0 +1,41 @@
+<?svml using="@hypit/recipe@1"?>
+
+<sheet version="1">
+  film.vertical { background: #0E0F14; }
+
+  ranking.tech {
+    rows: [
+      { "id": "s", "label": "S", "color": "#EE5F52" },
+      { "id": "a", "label": "A", "color": "#F0A04C" },
+      { "id": "b", "label": "B", "color": "#F0C84D" },
+      { "id": "c", "label": "C", "color": "#EDE356" },
+      { "id": "d", "label": "D", "color": "#A6DA7B" }
+    ];
+    board-background: #24252B;
+    board-border-color: #0E0F14;
+    board-border-width: 3;
+    stage-x: 0.5;
+    stage-y: 0.255;
+    stage-size: 190;
+    icon-radius-ratio: 0.14;
+    icon-fit: cover;
+    label-text-color: #1E1E1E;
+    label-size: 0.34;
+    line-height: 1;
+    appear-frames: 8;
+    move-frames: 14;
+    appear-gain: 0.16;
+    move-gain: 0.12;
+    sound-fade-frames: 0;
+    board-stack: 20;
+    stage-stack: 25;
+    item-stack: 30;
+  }
+
+  text.header { size: 26; weight: 900; tracking: 3; line-height: 1; }
+  text.title { size: 96; weight: 900; tracking: -2; line-height: 0.95; }
+  text.outro { size: 76; weight: 900; tracking: -1.5; line-height: 1; }
+  text.name { size: 64; weight: 900; tracking: -1; line-height: 1; }
+  text.quip { size: 36; weight: 700; line-height: 1.2; }
+  text.verdict { size: 44; weight: 900; tracking: 2; line-height: 1.4; }
+</sheet>

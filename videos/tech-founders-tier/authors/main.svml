@@ -1,0 +1,313 @@
+<?svml using="@hypit/markup@1"?>
+
+<svml>
+  <import as="asset" from="@hypit/media@1"/>
+  <import as="mediaop" from="@hypit/media-operations@1"/>
+  <import as="time" from="@hypit/timeline-author@1"/>
+  <import as="audio" from="@hypit/audio-track@1"/>
+  <import as="fonts" from="@hypit/fontsource@1"/>
+  <import as="space" from="@hypit/spatial@1"/>
+  <import as="typo" from="@hypit/text-fine@1"/>
+  <import as="ranking" from="@hypit/ranking@1"/>
+  <import as="film" from="@hypit/film@1"/>
+  <import as="html" from="@hypit/html-video@1"/>
+  <import as="look" source="../recipes/look.svs"/>
+
+  <!-- Pure motion graphics: every beat is an authored Window. Each founder
+       owns one 72-frame verdict Window; the tile drops in at its start and
+       glides into its row during the Window's last 14 frames. -->
+  <time:Clock id="clock" frame-rate="30"/>
+  <time:Timeline id="film-time" clock={clock} end="outro.end">
+    <time:Window id="intro" from="start" for="60f"/>
+    <time:Window id="neumann" from="intro.end" for="72f"/>
+    <time:Window id="zuckerberg" from="neumann.end" for="72f"/>
+    <time:Window id="gates" from="zuckerberg.end" for="72f"/>
+    <time:Window id="musk" from="gates.end" for="72f"/>
+    <time:Window id="altman" from="musk.end" for="72f"/>
+    <time:Window id="bezos" from="altman.end" for="72f"/>
+    <time:Window id="page" from="bezos.end" for="72f"/>
+    <time:Window id="huang" from="page.end" for="72f"/>
+    <time:Window id="jobs" from="huang.end" for="72f"/>
+    <time:Window id="outro" from="jobs.end" for="84f"/>
+    <time:Window id="ranking" from="intro.end" until="outro.end"/>
+  </time:Timeline>
+
+  <space:Canvas id="vertical" width="720" height="1280"/>
+  <space:Frame id="header-frame" within={vertical.bounds}
+    left="5%" top="2.5%" right="95%" bottom="7%"/>
+  <space:Frame id="title-frame" within={vertical.bounds}
+    left="5%" top="12%" right="95%" bottom="44%"/>
+  <space:Frame id="name-frame" within={vertical.bounds}
+    left="4%" top="8%" right="96%" bottom="15.5%"/>
+  <space:Frame id="quip-frame" within={vertical.bounds}
+    left="4%" top="34%" right="96%" bottom="43.5%"/>
+  <space:Frame id="verdict-frame" within={vertical.bounds}
+    left="7%" top="43.5%" right="93%" bottom="48.5%"/>
+  <space:Frame id="outro-head-frame" within={vertical.bounds}
+    left="5%" top="12%" right="95%" bottom="36%"/>
+  <space:Frame id="outro-sub-frame" within={vertical.bounds}
+    left="5%" top="36%" right="95%" bottom="44%"/>
+  <space:Frame id="board-frame" within={vertical.bounds}
+    left="3%" top="49.5%" right="97%" bottom="97%"/>
+
+  <!-- Fonts and text Styles -->
+  <fonts:Face id="display-font" package="@fontsource-variable/montserrat" weight="900" style="normal"/>
+  <fonts:Face id="body-font" package="@fontsource-variable/inter" weight="700" style="normal"/>
+  <typo:Style id="header-style" recipe={look.text.header} font={display-font}>
+    <typo:Fill color="#0E0F14"/>
+    <typo:Box target="line" color="#F5F5F7" padding="8 18" radius="20"/>
+  </typo:Style>
+  <typo:Style id="title-style" recipe={look.text.title} font={display-font}>
+    <typo:Fill color="#FFFFFF"/>
+    <typo:Shadow color="#00000099" x="0" y="6" blur="18"/>
+  </typo:Style>
+  <typo:Style id="title-accent" recipe={look.text.title} font={display-font}>
+    <typo:Fill>
+      <typo:Linear angle="90">
+        <typo:Stop offset="0" color="#EE5F52"/>
+        <typo:Stop offset="0.5" color="#F0C84D"/>
+        <typo:Stop offset="1" color="#A6DA7B"/>
+      </typo:Linear>
+    </typo:Fill>
+  </typo:Style>
+  <typo:Style id="outro-style" recipe={look.text.outro} font={display-font}>
+    <typo:Fill color="#FFFFFF"/>
+    <typo:Shadow color="#00000099" x="0" y="6" blur="18"/>
+  </typo:Style>
+  <typo:Style id="outro-accent" recipe={look.text.outro} font={display-font}>
+    <typo:Fill>
+      <typo:Linear angle="90">
+        <typo:Stop offset="0" color="#EE5F52"/>
+        <typo:Stop offset="0.5" color="#F0C84D"/>
+        <typo:Stop offset="1" color="#A6DA7B"/>
+      </typo:Linear>
+    </typo:Fill>
+  </typo:Style>
+  <typo:Style id="name-style" recipe={look.text.name} font={display-font}>
+    <typo:Fill color="#FFFFFF"/>
+    <typo:Shadow color="#000000AA" x="0" y="5" blur="14"/>
+  </typo:Style>
+  <typo:Style id="quip-style" recipe={look.text.quip} font={body-font}>
+    <typo:Fill color="#E9E9EE"/>
+  </typo:Style>
+  <typo:Style id="verdict-s" recipe={look.text.verdict} font={display-font}>
+    <typo:Fill color="#EE5F52"/>
+  </typo:Style>
+  <typo:Style id="verdict-a" recipe={look.text.verdict} font={display-font}>
+    <typo:Fill color="#F0A04C"/>
+  </typo:Style>
+  <typo:Style id="verdict-b" recipe={look.text.verdict} font={display-font}>
+    <typo:Fill color="#F0C84D"/>
+  </typo:Style>
+  <typo:Style id="verdict-c" recipe={look.text.verdict} font={display-font}>
+    <typo:Fill color="#EDE356"/>
+  </typo:Style>
+  <typo:Style id="verdict-d" recipe={look.text.verdict} font={display-font}>
+    <typo:Fill color="#A6DA7B"/>
+  </typo:Style>
+
+  <!-- Text motions. Verdict Windows are 72 frames; text clears before the
+       tile's 14-frame glide into its row. -->
+  <typo:Motion id="name-in">
+    <typo:ItemKeyframe at="0" scale="1.35" opacity="0"/>
+    <typo:ItemKeyframe at="6" scale="1" opacity="1" easing="ease-out"/>
+    <typo:ItemKeyframe at="56" scale="1" opacity="1"/>
+    <typo:ItemKeyframe at="64" scale="0.96" opacity="0" easing="ease-in"/>
+  </typo:Motion>
+  <typo:Motion id="quip-in">
+    <typo:ItemKeyframe at="0" y="24" opacity="0"/>
+    <typo:ItemKeyframe at="5" y="24" opacity="0"/>
+    <typo:ItemKeyframe at="13" y="0" opacity="1" easing="ease-out"/>
+    <typo:ItemKeyframe at="56" y="0" opacity="1"/>
+    <typo:ItemKeyframe at="64" y="0" opacity="0" easing="ease-in"/>
+  </typo:Motion>
+  <typo:Motion id="title-in">
+    <typo:ItemKeyframe at="0" scale="0.8" opacity="0"/>
+    <typo:ItemKeyframe at="8" scale="1" opacity="1" easing="ease-out"/>
+    <typo:ItemKeyframe at="50" scale="1" opacity="1"/>
+    <typo:ItemKeyframe at="59" scale="1.08" opacity="0" easing="ease-in"/>
+  </typo:Motion>
+  <typo:Motion id="outro-in">
+    <typo:ItemKeyframe at="0" y="30" opacity="0"/>
+    <typo:ItemKeyframe at="9" y="0" opacity="1" easing="ease-out"/>
+  </typo:Motion>
+
+  <typo:Flow id="header" timeline={film-time.timeline} within={header-frame}
+    style={header-style} z="60" inline-size="hug" during={film-time.ranking}>TECH FOUNDERS TIER LIST</typo:Flow>
+  <typo:Flow id="title" timeline={film-time.timeline} within={title-frame}
+    style={title-style} z="60" motion={title-in} during={film-time.intro}>
+    <typo:P><typo:Span id="line-1">TECH</typo:Span></typo:P>
+    <typo:P><typo:Span id="line-2">FOUNDERS</typo:Span></typo:P>
+    <typo:P style={title-accent}><typo:Span id="line-3">TIER LIST</typo:Span></typo:P>
+  </typo:Flow>
+
+  <typo:Flow id="neumann-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.neumann}>ADAM NEUMANN</typo:Flow>
+  <typo:Flow id="neumann-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.neumann}>
+    <typo:P>Turned renting desks into<typo:Break/>a $47B vibe.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="neumann-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-d} z="60" motion={quip-in} during={film-time.neumann}>D TIER</typo:Flow>
+  <typo:Flow id="zuckerberg-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.zuckerberg}>MARK ZUCKERBERG</typo:Flow>
+  <typo:Flow id="zuckerberg-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.zuckerberg}>
+    <typo:P>Bet billions on the metaverse.<typo:Break/>Still looking for the legs.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="zuckerberg-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-b} z="60" motion={quip-in} during={film-time.zuckerberg}>B TIER</typo:Flow>
+  <typo:Flow id="gates-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.gates}>BILL GATES</typo:Flow>
+  <typo:Flow id="gates-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.gates}>
+    <typo:P>Built Windows. Retired to<typo:Break/>fight actual viruses.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="gates-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-a} z="60" motion={quip-in} during={film-time.gates}>A TIER</typo:Flow>
+  <typo:Flow id="musk-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.musk}>ELON MUSK</typo:Flow>
+  <typo:Flow id="musk-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.musk}>
+    <typo:P>Lands rockets on boats.<typo:Break/>Posts at 3 a.m.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="musk-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-c} z="60" motion={quip-in} during={film-time.musk}>C TIER</typo:Flow>
+  <typo:Flow id="altman-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.altman}>SAM ALTMAN</typo:Flow>
+  <typo:Flow id="altman-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.altman}>
+    <typo:P>Fired on a Friday.<typo:Break/>Back within five days.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="altman-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-b} z="60" motion={quip-in} during={film-time.altman}>B TIER</typo:Flow>
+  <typo:Flow id="bezos-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.bezos}>JEFF BEZOS</typo:Flow>
+  <typo:Flow id="bezos-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.bezos}>
+    <typo:P>Started selling books.<typo:Break/>Now sells… everything.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="bezos-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-a} z="60" motion={quip-in} during={film-time.bezos}>A TIER</typo:Flow>
+  <typo:Flow id="page-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.page}>LARRY PAGE</typo:Flow>
+  <typo:Flow id="page-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.page}>
+    <typo:P>Made “just Google it”<typo:Break/>a verb.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="page-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-a} z="60" motion={quip-in} during={film-time.page}>A TIER</typo:Flow>
+  <typo:Flow id="huang-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.huang}>JENSEN HUANG</typo:Flow>
+  <typo:Flow id="huang-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.huang}>
+    <typo:P>Same leather jacket.<typo:Break/>Trillion-dollar chips.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="huang-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-s} z="60" motion={quip-in} during={film-time.huang}>S TIER</typo:Flow>
+  <typo:Flow id="jobs-name" timeline={film-time.timeline} within={name-frame}
+    style={name-style} z="60" motion={name-in} overflow="shrink" max-lines="1" minimum-scale="0.6"
+    during={film-time.jobs}>STEVE JOBS</typo:Flow>
+  <typo:Flow id="jobs-quip" timeline={film-time.timeline} within={quip-frame}
+    style={quip-style} z="60" motion={quip-in} during={film-time.jobs}>
+    <typo:P>“One more thing…”<typo:Break/>and every pocket changed.</typo:P>
+  </typo:Flow>
+  <typo:Flow id="jobs-verdict" timeline={film-time.timeline} within={verdict-frame}
+    style={verdict-s} z="60" motion={quip-in} during={film-time.jobs}>S TIER</typo:Flow>
+  <typo:Flow id="outro-ask" timeline={film-time.timeline} within={outro-head-frame}
+    style={outro-style} z="60" motion={outro-in} during={film-time.outro}>
+    <typo:P><typo:Span id="ask-1">WHO DID I</typo:Span></typo:P>
+    <typo:P style={outro-accent}><typo:Span id="ask-2">RANK WRONG?</typo:Span></typo:P>
+  </typo:Flow>
+  <typo:Flow id="outro-sub" timeline={film-time.timeline} within={outro-sub-frame}
+    style={quip-style} z="60" motion={outro-in} during={film-time.outro}>Fight me in the comments.</typo:Flow>
+
+  <!-- Board -->
+  <asset:Audio id="soundtrack" src="../assets/audio/shared-soundtrack.m4a"/>
+  <asset:Audio id="appear-sfx" src="../assets/audio/ranking-appear.wav"/>
+  <asset:Audio id="move-sfx" src="../assets/audio/ranking-move.wav"/>
+  <mediaop:Normalize id="soundtrack-media" source={soundtrack}
+    video="none" audio="default" span-authority="audio" clock={clock}/>
+  <mediaop:Normalize id="appear-media" source={appear-sfx}
+    video="none" audio="default" span-authority="audio" clock={clock}/>
+  <mediaop:Normalize id="move-media" source={move-sfx}
+    video="none" audio="default" span-authority="audio" clock={clock}/>
+
+  <asset:Image id="neumann-icon" src="../assets/icons/neumann.png"/>
+  <asset:Image id="zuckerberg-icon" src="../assets/icons/zuckerberg.png"/>
+  <asset:Image id="gates-icon" src="../assets/icons/gates.png"/>
+  <asset:Image id="musk-icon" src="../assets/icons/musk.png"/>
+  <asset:Image id="altman-icon" src="../assets/icons/altman.png"/>
+  <asset:Image id="bezos-icon" src="../assets/icons/bezos.png"/>
+  <asset:Image id="page-icon" src="../assets/icons/page.png"/>
+  <asset:Image id="huang-icon" src="../assets/icons/huang.png"/>
+  <asset:Image id="jobs-icon" src="../assets/icons/jobs.png"/>
+
+  <ranking:TierBoardStyle id="tier-style" recipe={look.ranking.tech} font={body-font}/>
+  <ranking:TierBoard id="founders" timeline={film-time.timeline}
+    within={vertical.bounds} frame={board-frame}
+    during={film-time.window} style={tier-style}
+    appear-sound={appear-media.media} move-sound={move-media.media}>
+    <ranking:TierItem id="neumann" tier="d" entry="drop" icon={neumann-icon} during={film-time.neumann}/>
+    <ranking:TierItem id="zuckerberg" tier="b" entry="drop" icon={zuckerberg-icon} during={film-time.zuckerberg}/>
+    <ranking:TierItem id="gates" tier="a" entry="drop" icon={gates-icon} during={film-time.gates}/>
+    <ranking:TierItem id="musk" tier="c" entry="drop" icon={musk-icon} during={film-time.musk}/>
+    <ranking:TierItem id="altman" tier="b" entry="drop" icon={altman-icon} during={film-time.altman}/>
+    <ranking:TierItem id="bezos" tier="a" entry="drop" icon={bezos-icon} during={film-time.bezos}/>
+    <ranking:TierItem id="page" tier="a" entry="drop" icon={page-icon} during={film-time.page}/>
+    <ranking:TierItem id="huang" tier="s" entry="drop" icon={huang-icon} during={film-time.huang}/>
+    <ranking:TierItem id="jobs" tier="s" entry="drop" icon={jobs-icon} during={film-time.jobs}/>
+  </ranking:TierBoard>
+
+  <audio:Track id="music" timeline={film-time.timeline}>
+    <audio:Clip id="music-bed" source={soundtrack-media.media} during={film-time.window}
+      gain="0.22" fade-in="300ms" fade-out="900ms"/>
+  </audio:Track>
+
+  <film:Film id="main" canvas={vertical.canvas} timeline={film-time.timeline}
+    appearance={look.film.vertical}>
+    <film:Track source={founders.visual}/>
+    <film:Track source={founders.audio}/>
+    <film:Track source={music.audio}/>
+    <film:Track source={header.visual}/>
+    <film:Track source={title.visual}/>
+    <film:Track source={neumann-name.visual}/>
+    <film:Track source={neumann-quip.visual}/>
+    <film:Track source={neumann-verdict.visual}/>
+    <film:Track source={zuckerberg-name.visual}/>
+    <film:Track source={zuckerberg-quip.visual}/>
+    <film:Track source={zuckerberg-verdict.visual}/>
+    <film:Track source={gates-name.visual}/>
+    <film:Track source={gates-quip.visual}/>
+    <film:Track source={gates-verdict.visual}/>
+    <film:Track source={musk-name.visual}/>
+    <film:Track source={musk-quip.visual}/>
+    <film:Track source={musk-verdict.visual}/>
+    <film:Track source={altman-name.visual}/>
+    <film:Track source={altman-quip.visual}/>
+    <film:Track source={altman-verdict.visual}/>
+    <film:Track source={bezos-name.visual}/>
+    <film:Track source={bezos-quip.visual}/>
+    <film:Track source={bezos-verdict.visual}/>
+    <film:Track source={page-name.visual}/>
+    <film:Track source={page-quip.visual}/>
+    <film:Track source={page-verdict.visual}/>
+    <film:Track source={huang-name.visual}/>
+    <film:Track source={huang-quip.visual}/>
+    <film:Track source={huang-verdict.visual}/>
+    <film:Track source={jobs-name.visual}/>
+    <film:Track source={jobs-quip.visual}/>
+    <film:Track source={jobs-verdict.visual}/>
+    <film:Track source={outro-ask.visual}/>
+    <film:Track source={outro-sub.visual}/>
+  </film:Film>
+  <html:Video id="final" composition={main.composition} timeline={film-time.timeline}/>
+</svml>
